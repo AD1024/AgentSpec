@@ -1,14 +1,21 @@
 from pydantic import BaseModel
+from typing import Union, Optional, Any, List, Dict, Tuple
 
 from agent import Action
-from langchain.agents.agent import BaseMultiActionAgent, BaseSingleActionAgent
-from typing import Union, Optional, Any, List, Dict, Tuple
-from langchain_core.callbacks.base import Callbacks
- 
+try:
+    from langchain.agents.agent import BaseMultiActionAgent, BaseSingleActionAgent
+except (ImportError, ModuleNotFoundError):
+    BaseMultiActionAgent = None
+    BaseSingleActionAgent = None
+try:
+    from langchain_core.callbacks.base import Callbacks
+except (ImportError, ModuleNotFoundError):
+    pass
+
 class RuleState(BaseModel):
     toolkit: str = ""
     action: Optional[Action] = None
-    agent: Optional[Union[BaseSingleActionAgent, BaseMultiActionAgent]] = None
+    agent: Optional[Any] = None
     intermediate_steps: Any #todo: List[Tuple[AgentAction, str]]
     user_input: Optional[Union[str, Dict[str, Any]]] = None # task_prompt
     run_mannager: Optional[Any] = None
